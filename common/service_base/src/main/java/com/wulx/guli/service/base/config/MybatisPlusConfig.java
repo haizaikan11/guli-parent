@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
-@EnableTransactionManagement
+@EnableTransactionManagement   //开启事务
 @Configuration
 @MapperScan("com.wulx.guli.service.*.mapper")  //所有的mapper都扫描进容器
 public class MybatisPlusConfig {
