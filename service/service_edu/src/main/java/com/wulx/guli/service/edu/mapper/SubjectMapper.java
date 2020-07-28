@@ -2,6 +2,9 @@ package com.wulx.guli.service.edu.mapper;
 
 import com.wulx.guli.service.edu.entity.Subject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.wulx.guli.service.edu.entity.vo.SubjectVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SubjectMapper extends BaseMapper<Subject> {
 
+    List<SubjectVo> selectNestedListByParentId(String s);
 }

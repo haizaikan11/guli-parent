@@ -1,5 +1,7 @@
 package com.wulx.guli.service.edu.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.wulx.guli.service.base.model.BaseEntity;
 import io.swagger.annotations.ApiModel;
@@ -24,6 +26,13 @@ import lombok.experimental.Accessors;
 public class CourseDescription extends BaseEntity {
 
     private static final long serialVersionUID=1L;
+
+    /**
+     * 课程简介不需要自己的id，直接将对应的课程id作为自身的id
+     */
+    @ApiModelProperty(value = "ID")
+    @TableId(value = "id", type = IdType.NONE)
+    private String id;
 
     @ApiModelProperty(value = "课程简介")
     private String description;

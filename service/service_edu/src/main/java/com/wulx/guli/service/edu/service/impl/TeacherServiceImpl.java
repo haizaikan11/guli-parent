@@ -3,15 +3,21 @@ package com.wulx.guli.service.edu.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wulx.guli.service.base.result.R;
 import com.wulx.guli.service.edu.controller.admin.TeacherController;
 import com.wulx.guli.service.edu.entity.Teacher;
 import com.wulx.guli.service.edu.entity.query.TeacherQuery;
+import com.wulx.guli.service.edu.feign.OssFileService;
 import com.wulx.guli.service.edu.mapper.TeacherMapper;
 import com.wulx.guli.service.edu.service.TeacherService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -54,5 +60,39 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         }
 
         return baseMapper.selectPage(pageParam,wrapper);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectNameListByKey(String key) {
+        QueryWrapper<Teacher> wrapper = new QueryWrapper<>();
+        wrapper.orderByDesc("sort");
+        if (!StringUtils.isEmpty(key)){
+            //左%会使索引失败
+            wrapper.select("name");
+
+            wrapper.likeRight("name",key);
+        }
+        return baseMapper.selectMaps(wrapper);
+    }
+
+    @Autowired
+    OssFileService ossFileService;
+    @Override
+    public boolean removeAvatarById(String id) {
+        //根据id获取数据
+        Teacher teacher = baseMapper.selectById(id);
+        //确保数据库中数据不为空
+        if (teacher == null){
+            return false;
+        }
+
+        String url = teacher.getAvatar();
+        //判定url是否存在
+        if(StringUtils.isNotEmpty(url)) {
+
+            R r = ossFileService.removeFile(url);
+            return r.getSuccess();
+        }
+        return false;
     }
 }

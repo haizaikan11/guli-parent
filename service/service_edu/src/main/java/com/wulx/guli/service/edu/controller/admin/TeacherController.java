@@ -6,14 +6,17 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wulx.guli.service.base.result.R;
 import com.wulx.guli.service.edu.entity.Teacher;
 import com.wulx.guli.service.edu.entity.query.TeacherQuery;
+import com.wulx.guli.service.edu.feign.OssFileService;
 import com.wulx.guli.service.edu.service.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -24,7 +27,9 @@ import java.util.List;
  * @since 2020-07-16
  */
 @Api(tags = "讲师管理")
+@Slf4j
 @RestController
+@CrossOrigin     //解决跨域
 @RequestMapping("/admin/edu/teacher")
 public class TeacherController {
     @Autowired
@@ -50,9 +55,28 @@ public class TeacherController {
      */
     @ApiOperation(value = "根据id删除",notes = "根据id删除指定的讲师")
     @DeleteMapping("/remove/{id}")
-     public R removeById(@ApiParam(value = "讲师id",readOnly = true) @PathVariable Integer id){
+     public R removeById(@ApiParam(value = "讲师id",readOnly = true) @PathVariable String id){
 
+
+        //删除头像
+        teacherService.removeAvatarById(id);
+        //删除老师
         boolean b = teacherService.removeById(id);
+        if(!b){
+            return R.error().message("数据不存在");
+        }
+        return R.ok().message("删除成功");
+//        boolean b = teacherService.removeById(id);
+//        if(b){
+//            return R.ok().message("删除成功");
+//        }
+//       return R.error().message("删除失败");
+    }
+    @ApiOperation(value = "根据id批量删除",notes = "根据id批量删除指定的讲师")
+    @DeleteMapping("/removeRows")
+     public R removeRows(@ApiParam(value = "讲师列表",readOnly = true) @RequestBody List<String> ids){
+
+        boolean b = teacherService.removeByIds(ids);
         if(b){
             return R.ok().message("删除成功");
         }
@@ -83,7 +107,9 @@ public class TeacherController {
             @ApiParam(value = "新增的讲师",required = true)
            @RequestBody Teacher teacher
     ){
+
         boolean save = teacherService.save(teacher);
+        System.out.println(save + "====================================================");
         if(save){
             return R.ok().message("新增成功");
         }else {
@@ -111,12 +137,45 @@ public class TeacherController {
     ){
         Teacher teacher = teacherService.getById(id);
         if (teacher != null) {
-            return R.ok().data("item",teacher);
+            return R.ok().message("删除成功");
         }else {
-            return R.error().message("错误id");
+            return R.error().message("数据不存在");
         }
     }
 
+    @ApiOperation(value = "根据名字模糊查询讲师名字的列表")
+    @GetMapping("list/name/{key}")
+    public R selectNameListByKey(
+            @ApiParam(value = "关键字", required = true)
+            @PathVariable String key
+    ){
+        List<Map<String, Object>> nameList = teacherService.selectNameListByKey(key);
+        return R.ok().data("nameList",nameList);
+    }
 
+    @DeleteMapping("removeFile/{id}")
+    @ApiOperation("根据id删除头像和教师信息")
+    public R removeAvatarById(@PathVariable String id){
+        //删除头像
+        teacherService.removeAvatarById(id);
+        //删除老师
+        boolean b = teacherService.removeById(id);
+        if(!b){
+            return R.error().message("数据不存在");
+        }
+        return R.ok().message("删除成功");
+    }
+
+
+    @Autowired
+    OssFileService ossFileService;
+
+    @GetMapping("test")
+    @ApiOperation("测试")
+    public R test(){
+        log.info("调用方发起调用");
+        ossFileService.test();
+        return R.ok();
+    }
 }
 
