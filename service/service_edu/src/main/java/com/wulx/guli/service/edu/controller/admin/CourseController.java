@@ -1,14 +1,24 @@
 package com.wulx.guli.service.edu.controller.admin;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wulx.guli.service.base.result.R;
+import com.wulx.guli.service.edu.entity.Course;
+import com.wulx.guli.service.edu.entity.Teacher;
 import com.wulx.guli.service.edu.entity.form.CourseInfoForm;
+import com.wulx.guli.service.edu.entity.query.CourseQuery;
+import com.wulx.guli.service.edu.entity.query.TeacherQuery;
+import com.wulx.guli.service.edu.entity.vo.ChapterVo;
+import com.wulx.guli.service.edu.entity.vo.CourseVo;
+import com.wulx.guli.service.edu.service.ChapterService;
 import com.wulx.guli.service.edu.service.CourseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -65,6 +75,33 @@ public class CourseController {
             return R.ok().message("查询成功").data("item",courseInfoForm);
         }
         return R.error().message("数据不存在");
+    }
+
+    @ApiOperation("分页查询")
+    @GetMapping("/listPage/{page}/{limit}")
+    public R listPage(
+            @ApiParam(value = "当前页面数",required = true) @PathVariable Long page,
+            @ApiParam(value = "每页记录数",required = true) @PathVariable Long limit,
+            @ApiParam(value = "讲师id") CourseQuery courseQuery
+    ){
+        IPage<CourseVo> courseIPage = courseService.selectPage(page, limit, courseQuery);
+        // 前端页面需要使用的是总数和页面的
+        return R.ok().data("rows",courseIPage.getRecords()).data("total",courseIPage.getTotal());
+
+    }
+
+    @Autowired
+    ChapterService chapterService;
+
+    @ApiOperation("嵌套章节数据列表")
+    @GetMapping("nested-list/{courseId}")
+    public R nestedListByCourseId(
+            @ApiParam(value = "课程ID", required = true)
+            @PathVariable String courseId){
+
+
+        List<ChapterVo> chapterVoList = chapterService.nestedList(courseId);
+        return R.ok().data("items", chapterVoList);
     }
 }
 

@@ -1,19 +1,27 @@
 package com.wulx.guli.service.edu.service.impl;
 
 
+import com.alibaba.druid.util.StringUtils;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wulx.guli.service.edu.entity.Course;
 import com.wulx.guli.service.edu.entity.CourseDescription;
 import com.wulx.guli.service.edu.entity.form.CourseInfoForm;
+import com.wulx.guli.service.edu.entity.query.CourseQuery;
+import com.wulx.guli.service.edu.entity.vo.CourseVo;
 import com.wulx.guli.service.edu.mapper.CourseDescriptionMapper;
 import com.wulx.guli.service.edu.mapper.CourseMapper;
-import com.wulx.guli.service.edu.service.CourseDescriptionService;
 import com.wulx.guli.service.edu.service.CourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>
@@ -72,6 +80,42 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
 
         return course.getId();
+    }
+
+    @Override
+    public IPage<CourseVo> selectPage(Long page, Long limit, CourseQuery courseQuery) {
+
+        QueryWrapper<CourseVo> queryWrapper = new QueryWrapper<>();
+        // 根据添加时间排序
+        queryWrapper.orderByDesc("c.publish_time");
+
+        String title = courseQuery.getTitle();
+        String teacherId = courseQuery.getTeacherId();
+        String subjectParentId = courseQuery.getSubjectParentId();
+        String subjectId = courseQuery.getSubjectId();
+
+        if (!StringUtils.isEmpty(title)) {
+            queryWrapper.like("c.title", title);
+        }
+
+        if (!StringUtils.isEmpty(teacherId) ) {
+            queryWrapper.eq("c.teacher_id", teacherId);
+        }
+
+        if (!StringUtils.isEmpty(subjectParentId)) {
+            queryWrapper.eq("c.subject_parent_id", subjectParentId);
+        }
+
+        if (!StringUtils.isEmpty(subjectId)) {
+            queryWrapper.eq("c.subject_id", subjectId);
+        }
+
+
+        IPage<CourseVo> pageModel = new Page<>(page,limit);
+        // 查出页面信息
+        List<CourseVo> list = baseMapper.selectPageByCourseQuery(pageModel,queryWrapper);
+        pageModel.setRecords(list);
+        return pageModel;
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.wulx.guli.service.edu.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wulx.guli.service.edu.entity.Course;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wulx.guli.service.edu.entity.form.CourseInfoForm;
+import com.wulx.guli.service.edu.entity.query.CourseQuery;
+import com.wulx.guli.service.edu.entity.vo.CourseVo;
 
 /**
  * <p>
@@ -19,4 +22,6 @@ public interface CourseService extends IService<Course> {
     CourseInfoForm getCourseInfoById(String id);
 
     String updateCourseInfo(CourseInfoForm courseInfoForm);
+
+    IPage<CourseVo> selectPage(Long page, Long limit, CourseQuery courseQuery);
 }
