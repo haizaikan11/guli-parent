@@ -21,7 +21,7 @@ public class CodeGenerator {
     public void genCode() {
 
         String prefix = "";//根据实际修改
-        String moduleName = "cmc";
+        String moduleName = "cms";
 
         // 1、创建代码生成器
         AutoGenerator mpg = new AutoGenerator();
