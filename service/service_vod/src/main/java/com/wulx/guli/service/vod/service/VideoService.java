@@ -15,4 +15,6 @@ public interface VideoService {
     String uploadVideo(InputStream inputStream, String originalFilename);
 
     void removeVideo(String videoSourceId) throws ClientException;
+
+    String getPlayAuth(String videoSourceId) throws ClientException;
 }
