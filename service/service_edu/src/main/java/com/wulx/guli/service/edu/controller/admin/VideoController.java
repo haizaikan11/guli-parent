@@ -75,10 +75,9 @@ public class VideoController {
             @ApiParam(value = "课时ID", required = true)
             @PathVariable String id){
 
-        //TODO 删除视频：VOD
         //在此处调用vod中的删除视频文件的接口
-
-        //删除数据库数据
+        videoService.removeMediaVideoById(id);
+            //删除数据库数据
         boolean result = videoService.removeById(id);
         if (result) {
             return R.ok().message("删除成功");

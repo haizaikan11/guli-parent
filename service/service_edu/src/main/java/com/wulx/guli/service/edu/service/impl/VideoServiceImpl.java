@@ -1,9 +1,11 @@
 package com.wulx.guli.service.edu.service.impl;
 
 import com.wulx.guli.service.edu.entity.Video;
+import com.wulx.guli.service.edu.feign.VodMediaService;
 import com.wulx.guli.service.edu.mapper.VideoMapper;
 import com.wulx.guli.service.edu.service.VideoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +19,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements VideoService {
 
+    @Autowired
+    VodMediaService vodMediaService;
+
+    @Override
+    public void removeMediaVideoById(String id) {
+        Video video = baseMapper.selectById(id);
+        if(video != null){
+            vodMediaService.removeVideo(id);
+        }
+
+    }
 }
