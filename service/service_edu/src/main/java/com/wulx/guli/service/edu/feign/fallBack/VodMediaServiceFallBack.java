@@ -4,8 +4,10 @@ import com.wulx.guli.service.base.result.R;
 import com.wulx.guli.service.edu.feign.VodMediaService;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
+@Service
 public class VodMediaServiceFallBack implements VodMediaService {
     @Override
     public R removeVideo(String videoSourceId) {

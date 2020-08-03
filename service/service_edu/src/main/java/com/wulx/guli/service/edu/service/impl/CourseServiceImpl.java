@@ -9,6 +9,7 @@ import com.wulx.guli.service.edu.entity.Course;
 import com.wulx.guli.service.edu.entity.CourseDescription;
 import com.wulx.guli.service.edu.entity.form.CourseInfoForm;
 import com.wulx.guli.service.edu.entity.query.CourseQuery;
+import com.wulx.guli.service.edu.entity.query.WebCourseQuery;
 import com.wulx.guli.service.edu.entity.vo.CourseVo;
 import com.wulx.guli.service.edu.mapper.CourseDescriptionMapper;
 import com.wulx.guli.service.edu.mapper.CourseMapper;
@@ -116,6 +117,49 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         List<CourseVo> list = baseMapper.selectPageByCourseQuery(pageModel,queryWrapper);
         pageModel.setRecords(list);
         return pageModel;
+    }
+
+    /**
+     * 用户页面的课程列表
+     * @param webCourseQuery
+     * @return
+     */
+    @Override
+    public List<Course> webCourseList(WebCourseQuery webCourseQuery) {
+
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+
+        //查询已发布的课程
+        queryWrapper.eq("status", Course.COURSE_NORMAL);
+
+        // 一级标题的查询
+        if (!StringUtils.isEmpty(webCourseQuery.getSubjectParentId())) {
+            queryWrapper.eq("subject_parent_id", webCourseQuery.getSubjectParentId());
+            // 只有存在一级标题，才有二级标题
+            if (!StringUtils.isEmpty(webCourseQuery.getSubjectId())) {
+                queryWrapper.eq("subject_id", webCourseQuery.getSubjectId());
+            }
+        }
+        // 购买人数排序
+        if (!StringUtils.isEmpty(webCourseQuery.getBuyCountSort())) {
+            queryWrapper.orderByDesc("buy_count");
+        }
+        // 添加时间排序
+        if (!StringUtils.isEmpty(webCourseQuery.getPublishTimeSort())) {
+            queryWrapper.orderByDesc("publish_time");
+        }
+        // 价格排序
+        if (!StringUtils.isEmpty(webCourseQuery.getPriceSort())) {
+            // 默认排序
+            if(webCourseQuery.getType() == null || webCourseQuery.getType() == 1){
+                queryWrapper.orderByAsc("price");
+            }else{
+
+                queryWrapper.orderByDesc("price");
+            }
+        }
+
+        return baseMapper.selectList(queryWrapper);
     }
 
     @Override

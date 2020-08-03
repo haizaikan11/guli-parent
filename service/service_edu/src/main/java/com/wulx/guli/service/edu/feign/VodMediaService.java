@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
-@FeignClient(name = "vod-service",fallback = VodMediaServiceFallBack.class)
+@FeignClient(value = "service-vod",fallback = VodMediaServiceFallBack.class)
 public interface VodMediaService {
     // 地址需写全！
     @DeleteMapping("/admin/vod/media/remove/{videoSourceId}")
     public R removeVideo(
-            @ApiParam(value = "阿里云视频id",required = true)
             @PathVariable String videoSourceId
     );
 }
