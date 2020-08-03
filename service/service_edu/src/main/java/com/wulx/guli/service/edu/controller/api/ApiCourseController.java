@@ -30,7 +30,7 @@ public class ApiCourseController {
     @GetMapping("list")
     public R list(
             @ApiParam(value = "查询条件",required = true)
-            @RequestBody WebCourseQuery webCourseQuery
+             WebCourseQuery webCourseQuery
     ){
         List<Course> list = courseService.webCourseList(webCourseQuery);
         return R.ok().data("courseList",list);

@@ -11,6 +11,7 @@ import com.wulx.guli.service.edu.entity.form.CourseInfoForm;
 import com.wulx.guli.service.edu.entity.query.CourseQuery;
 import com.wulx.guli.service.edu.entity.query.WebCourseQuery;
 import com.wulx.guli.service.edu.entity.vo.CourseVo;
+import com.wulx.guli.service.edu.entity.vo.WebCourseVo;
 import com.wulx.guli.service.edu.mapper.CourseDescriptionMapper;
 import com.wulx.guli.service.edu.mapper.CourseMapper;
 import com.wulx.guli.service.edu.service.CourseService;
@@ -161,6 +162,16 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
         return baseMapper.selectList(queryWrapper);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public WebCourseVo selectWebCourseVoById(String id) {
+            // 更新浏览数
+            baseMapper.updateViewCountById(id);
+            // 返回查询到的页面数据
+        return  baseMapper.selectWebCourseVoById(id);
+    }
+
 
     @Override
     public CourseInfoForm getCourseInfoById(String id) {

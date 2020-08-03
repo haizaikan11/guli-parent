@@ -98,8 +98,6 @@ public class CourseController {
     public R nestedListByCourseId(
             @ApiParam(value = "课程ID", required = true)
             @PathVariable String courseId){
-
-
         List<ChapterVo> chapterVoList = chapterService.nestedList(courseId);
         return R.ok().data("items", chapterVoList);
     }

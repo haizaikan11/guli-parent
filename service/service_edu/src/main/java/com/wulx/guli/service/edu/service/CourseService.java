@@ -7,6 +7,7 @@ import com.wulx.guli.service.edu.entity.form.CourseInfoForm;
 import com.wulx.guli.service.edu.entity.query.CourseQuery;
 import com.wulx.guli.service.edu.entity.query.WebCourseQuery;
 import com.wulx.guli.service.edu.entity.vo.CourseVo;
+import com.wulx.guli.service.edu.entity.vo.WebCourseVo;
 
 import java.util.List;
 
@@ -29,4 +30,6 @@ public interface CourseService extends IService<Course> {
     IPage<CourseVo> selectPage(Long page, Long limit, CourseQuery courseQuery);
 
     List<Course> webCourseList(WebCourseQuery webCourseQuery);
+
+    WebCourseVo selectWebCourseVoById(String id);
 }

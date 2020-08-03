@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.wulx.guli.service.edu.entity.Course;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wulx.guli.service.edu.entity.vo.CourseVo;
+import com.wulx.guli.service.edu.entity.vo.WebCourseVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -26,4 +27,18 @@ public interface CourseMapper extends BaseMapper<Course> {
             //mp会自动组装queryWrapper：
             //@Param(Constants.WRAPPER) 和 xml文件中的 ${ew.customSqlSegment} 对应
            @Param(Constants.WRAPPER) QueryWrapper<CourseVo> queryWrapper);
+
+    /**
+     * 根据课程id获取到课程页面信息
+     * @param courseId
+     * @return
+     */
+    WebCourseVo selectWebCourseVoById(String courseId);
+
+    /**
+     * 根据id更新浏览数
+     * @param id
+     * @return
+     */
+    int updateViewCountById(String id);
 }
