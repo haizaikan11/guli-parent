@@ -32,4 +32,10 @@ public interface CourseService extends IService<Course> {
     List<Course> webCourseList(WebCourseQuery webCourseQuery);
 
     WebCourseVo selectWebCourseVoById(String id);
+
+    /**
+     * 根据浏览人数获取热门课程
+     * @return 返回热门课程集合
+     */
+    List<Course> getHotCourse();
 }

@@ -27,4 +27,10 @@ public interface TeacherService extends IService<Teacher> {
          * @return
          */
         Map<String, Object> selectTeacherInfoById(String id);
+
+        /**
+         * 根据sort来获取4个最热门老师
+         * @return 返回热门老师list
+         */
+          List<Teacher> getHotTeacher();
 }

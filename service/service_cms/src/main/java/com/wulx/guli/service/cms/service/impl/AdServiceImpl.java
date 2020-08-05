@@ -12,6 +12,7 @@ import com.wulx.guli.service.cms.mapper.AdMapper;
 import com.wulx.guli.service.cms.service.AdService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,5 +56,17 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements AdServic
             }
         }
         return false;
+    }
+
+    @Cacheable(value = "index",key = "'selectByAdTypeId'")
+    @Override
+    public List<Ad> selectByAdTypeId(String adTypeId) {
+
+        QueryWrapper<Ad> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type_id", adTypeId);
+        queryWrapper.orderByAsc("sort","id");
+
+        List<Ad> ads = baseMapper.selectList(queryWrapper);
+        return ads;
     }
 }

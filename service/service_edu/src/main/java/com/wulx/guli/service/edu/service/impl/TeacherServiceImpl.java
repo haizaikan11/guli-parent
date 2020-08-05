@@ -17,6 +17,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -113,5 +114,14 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         map.put("teacher",teacher);
         map.put("courseList",courseList);
         return map;
+    }
+
+    @Cacheable(value = "index",key = "'getHotTeacher'")
+    @Override
+    public List<Teacher> getHotTeacher() {
+        QueryWrapper<Teacher> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("sort");
+        queryWrapper.last("limit 4");
+        return baseMapper.selectList(queryWrapper);
     }
 }
