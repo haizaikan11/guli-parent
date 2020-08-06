@@ -27,7 +27,7 @@ spring:
 aliyun:
   sms:
     regionId: cn-hangzhou
-    keyId: LTAI4GG7pQGyj6659TbUco5t
-    keySecret: JhOXNIyTHHBHlaYvUkmKPsqxijW3nF
+    keyId:
+    keySecret:
     templateCode: SMS_198930646
     signName: ABC商城
