@@ -20,5 +20,5 @@ aliyun:
 
    # templateGroupId: 你配置的转码模板组id #转码模板组id
     workflowId: 你配置的工作流id #工作流id
-    keyId: LTAI4GG7pQGyj6659TbUco5t
-    keySecret: JhOXNIyTHHBHlaYvUkmKPsqxijW3nF
+    keyId:
+    keySecret:
